@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  user-express-api:
+    build: ./express-api
+    container_name: user-serivce
+    hostname: nodeserver
+    ports:
+      - "7000:7000"
+    networks:
+      - mynet
+    volumes:
+      - ./express-api/src:/src
+      - ./express-api/prisma:/prisma
+    restart: always
+  
+  nginx:
+    build: ./nginx
+    container_name: nginxnodeserver
+    hostname: nginx
+    ports:
+      - "8000:80"
+    depends_on:
+      - user-express-api
+    networks:
+      - mynet
+
+networks:
+  mynet:
+    external: true
